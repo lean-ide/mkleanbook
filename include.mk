@@ -16,7 +16,7 @@ TITLE ?= mkleanbook
 AUTHORS ?=
 COPYRIGHT_NOTICE ?=
 
-all: htmls $(COMBINED).pdf
+all: htmls #$(COMBINED).pdf
 
 htmls: $(HTMLS) copy-html-assets $(NAV_DATA)
 
@@ -36,20 +36,20 @@ $(COMBINED).org: $(ORGS)
 	  -f org-html-export-to-html) && \
 	mv $*.tmphtml.html $@
 
-%.tmptex.org: %.org $(MKLEANBOOK_PATH)/header/latex.org $(MKLEANBOOK_PATH)/footer/latex.org
-	cat $(MKLEANBOOK_PATH)/header/latex.org $< $(MKLEANBOOK_PATH)/footer/latex.org >$@
+#%.tmptex.org: %.org $(MKLEANBOOK_PATH)/header/latex.org $(MKLEANBOOK_PATH)/footer/latex.org
+#	cat $(MKLEANBOOK_PATH)/header/latex.org $< $(MKLEANBOOK_PATH)/footer/latex.org >$@
 
-.PRECIOUS: %.tex
-%.tex: %.tmptex.org $(MKLEANBOOK_PATH)/.cask $(MKLEANBOOK_PATH)/elisp/org-pdf-export.el
-	(cd $(MKLEANBOOK_PATH) && $(CASK_BIN) exec $(EMACS_BIN) \
-	  --no-site-file --no-site-lisp -q --batch \
-	  -l elisp/org-pdf-export.el \
-	  --visit $(PWD)/$< \
-	  -f org-latex-export-to-latex) && \
-	mv $*.tmptex.tex $@
-
-%.pdf: %.tex pygments-main gitHeadInfo.gin
-	PATH="$(PWD)/pygments-main:$(PATH)" TEXINPUTS="$(MKLEANBOOK_PATH)/:$(TEXINPUTS)" latexmk -interaction=errorstopmode --xelatex --shell-escape $<
+#.PRECIOUS: %.tex
+#%.tex: %.tmptex.org $(MKLEANBOOK_PATH)/.cask $(MKLEANBOOK_PATH)/elisp/org-pdf-export.el
+#	(cd $(MKLEANBOOK_PATH) && $(CASK_BIN) exec $(EMACS_BIN) \
+#	  --no-site-file --no-site-lisp -q --batch \
+#	  -l elisp/org-pdf-export.el \
+#	  --visit $(PWD)/$< \
+#	  -f org-latex-export-to-latex) && \
+#	mv $*.tmptex.tex $@
+#
+#%.pdf: %.tex pygments-main gitHeadInfo.gin
+#	PATH="$(PWD)/pygments-main:$(PATH)" TEXINPUTS="$(MKLEANBOOK_PATH)/:$(TEXINPUTS)" latexmk -interaction=errorstopmode --xelatex --shell-escape $<
 
 $(MKLEANBOOK_PATH)/.cask:
 	$(MAKE) -C $(MKLEANBOOK_PATH) .cask
@@ -101,6 +101,6 @@ copy-html-assets:
 	cp -ra $(MKLEANBOOK_PATH)/images ./
 	cp -ra $(MKLEANBOOK_PATH)/js ./
 
-.PHONY: all copy-html-assets clean install-cask pygments-main
+.PHONY: all copy-html-assets #clean install-cask pygments-main
 
 .DELETE_ON_ERROR:
